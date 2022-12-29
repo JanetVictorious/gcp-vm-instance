@@ -24,10 +24,10 @@ resource "google_compute_disk" "persistent_disk" {
   size = "200"
 }
 
-resource "google_compute_instance" "e2edf_vm" {
+resource "google_compute_instance" "virtual_machine" {
   name                      = var.vm_name
   project                   = var.project_id
-  machine_type              = "n2-standard-8"
+  machine_type              = "e2-medium"
   zone                      = var.zone
   allow_stopping_for_update = "true"
 
@@ -49,7 +49,7 @@ resource "google_compute_instance" "e2edf_vm" {
   }
 }
 
-resource "google_compute_router" "nat_router_europe_west4" {
+resource "google_compute_router" "nat_router" {
   name    = "nat-router-${var.region}"
   region  = var.region
   network = google_compute_network.default.name
@@ -57,7 +57,7 @@ resource "google_compute_router" "nat_router_europe_west4" {
 
 resource "google_compute_router_nat" "nat_config" {
   name                               = "nat-config-${var.region}"
-  router                             = google_compute_router.nat_router_europe_west4.name
+  router                             = google_compute_router.nat_router.name
   region                             = var.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
